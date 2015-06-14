@@ -16,10 +16,16 @@
 </form>
 
 <dl class="dl-horizontal">
-  <dt>出発駅</dt><dd>...</dd>
-  <dt>到着駅</dt><dd>...</dd>
-  <dt>出発時刻</dt><dd>...</dd>
-  <dt>到着時刻</dt><dd>...</dd>
-  <dt>運賃</dt><dd>...</dd>
-  <dt>路線</dt><dd>...</dd>
+  <dt>バス運賃</dt><dd><%=@bus_first["price"]%></dd>
+  <hr>
+
+  <% @bus_first["info"].each do |info| %>
+      <dt>バス出発時刻</dt><dd><%= info["start_time"] %></dd>
+      <dt>バス到着時刻</dt><dd><%= info["arrive_time"] %></dd>
+      <dt>出発駅</dt><dd><%= info["start_name"] %></dd>
+      <dt>到着駅</dt><dd><%= info["arrive_name"] %></dd>
+      <dt>バス運賃</dt><dd><%= info["fare"] %></dd>
+      <dt>バス路線</dt><dd><%= info["details"].first %></dd>
+      <hr>
+  <% end %>
 </dl>

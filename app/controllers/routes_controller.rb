@@ -1,5 +1,7 @@
 require 'json'
+require 'time'
 require 'uri'
+
 
 class RoutesController < ApplicationController
   before_action :set_route, only: [:show, :edit, :update, :destroy]
@@ -25,31 +27,41 @@ class RoutesController < ApplicationController
 
     jr_routes = Transfer::Jr::search(from="岐阜", to="名古屋", 2015, 6, 14, hour=10, min=00, "出発")
     @jr_route = jr_routes.size > 0 ? jr_routes.first : nil
-    pp @jr_route
-
-
   end
 
   def sub
 
+    @origin_bus="岐阜大学"
+    @dest_bus="JR岐阜"
+    @origin_station="岐阜"
+    @dest_station="名古屋"
 
+    uri=URI.escape('http://api-gifubus.herokuapp.com/v1?date=2015/01/14&time=1605&start_arrive=0&start_name=繰舟橋&arrive_name=下佐波')
 
-    uri=URI.escape('http://api-gifubus.herokuapp.com/v1?date=2015/01/14&time=1605&start_arrive=0&start_name=岐阜大学&arrive_name=JR岐阜')
+    # uri=URI.escape('http://api-gifubus.herokuapp.com/v1?date=2015/01/14&time=1605&start_arrive=0&start_name=岐阜大学&arrive_name=JR岐阜')
     uri = URI.parse(uri)
     json = Net::HTTP.get(uri)
     result = JSON.parse(json)
 
-    a = result["data"].first["price"]
-    a = Transfer::Jr::search(from="岐阜", to="名古屋", 2015, 6, 14, hour=10, min=00, "出発")
+
+    @bus_first=result["data"].first
+    @bus_last=result["data"].first["info"].last
+
+    bus_arrive=result["data"].first["info"].last["arrive_time"]
+
+    bus_arrivetime=Time.parse(bus_arrive)
+    bus_arrivetime=bus_arrivetime+300
+
+    jrstart_hour=bus_arrivetime.hour
+    jrstart_min=bus_arrivetime.min
+
+    @result2=Transfer::Jr::search("岐阜","名古屋",2015,1,14,jrstart_hour,jrstart_min,"出発")
   end
 
   # GET /routes/1
   # GET /routes/1.json
   def show
   end
-
-  # http://transit.loco.yahoo.co.jp/search/result?flatlon=&from=岐阜&tlatlon=&to=名古屋&via=&via=&via=&y=2015&m=6&d=14&hh=16&m1=4&m2=1&type=1&ticket=normal&al=1&shin=1&ex=1&hb=1&lb=1&sr=1&s=0&expkind=1&ws=2&kw=名古屋
-  # http://transit.loco.yahoo.co.jp/search/result?flatlon=&from=岐阜&tlatlon=&to=名古屋&via=&via=&via=&y=2015&m=06&d=14&hh=16&m2=1&m1=4&type=1&ticket=normal&al=1&shin=1&ex=1&hb=1&lb=1&sr=1&s=0&expkind=1&ws=2&kw=名古屋
 
   # GET /routes/new
   def new
