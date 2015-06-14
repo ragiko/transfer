@@ -7,6 +7,21 @@ class RoutesController < ApplicationController
     @routes = Route.all
   end
 
+  def sub
+    require 'json'
+    require 'uri'
+
+    uri=URI.escape('http://api-gifubus.herokuapp.com/v1?date=2015/01/14&time=1605&start_arrive=0&start_name=岐阜大学&arrive_name=JR岐阜')
+
+    uri = URI.parse(uri)
+    json = Net::HTTP.get(uri)
+    result = JSON.parse(json)
+
+    a=result["data"].first["price"]
+    p a
+    raise a.inspect
+  end
+
   # GET /routes/1
   # GET /routes/1.json
   def show
