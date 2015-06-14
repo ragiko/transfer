@@ -77,7 +77,9 @@
             </select> 時
             <select name="mm">
                 <% for i in 0..59 %>
-                    <option value="<%= i %>"><%= i %></option>
+                    <% if i % 5 == 0 %>
+                        <option value="<%= i %>"><%= i %></option>
+                    <% end %>
                 <% end %>
             </select> 分
             <select name="lr">
@@ -101,27 +103,31 @@
 </div>
 
 <div class="route">
-    <h2>14:15発 → 15:35発 </h2>
+    <!-- TODO: 全体の数値を計算 -->
+    <h2>14:15 発 → 15:35発 </h2>
     <h3>(時間: 60分 料金: 400円)</h3>
-    <div class="route-detail">
-        <p class="bg-primary">繰舟橋 (14:15) 200円
 
-        <p>
+    <!-- TODO: bus_firstがない場合はよしなに処理する -->
+    <!-- 岐阜バスの検索 -->
+    <% @bus_first["info"].each do |info| %>
+        <div class="route-detail">
+            <p class="bg-primary"><%= info["start_name"]%> (<%= info["start_time"] %>) <%= info["fare"] %>
 
-        <div class="bs-callout-wp">
-            <div class="bs-callout bs-callout-info" id="callout-help-text-accessibility">
-                <p>
-                    茜部三田洞線 三田洞団地行き 岐阜バス
-                    N61 下佐波→ＪＲ岐阜→長良北町
-                </p>
+            <p>
+
+            <div class="bs-callout-wp">
+                <div class="bs-callout bs-callout-info" id="callout-help-text-accessibility">
+                    <p>
+                        <%= info["details"].first %>
+                    </p>
+                </div>
             </div>
+            <p class="bg-primary"><%= info["arrive_name"] %> (<%= info["arrive_time"] %>)
+
+            <p>
         </div>
-        <p class="bg-primary">JR岐阜 (14:35)
-
-        <p>
-    </div>
-
-    <%="あいうえお"%>
+    <% end %>
+    <!-- JRの検索 -->
     <% if !@jr_route.nil? %>
         <div class="route-detail">
             <p>(時間: <%= @jr_route[:min] %> 料金: <%= @jr_route[:fare] %>)</p>
