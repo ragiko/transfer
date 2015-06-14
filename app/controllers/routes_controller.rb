@@ -1,3 +1,5 @@
+
+
 class RoutesController < ApplicationController
   before_action :set_route, only: [:show, :edit, :update, :destroy]
 
@@ -7,10 +9,18 @@ class RoutesController < ApplicationController
     @routes = Route.all
   end
 
+  def sub
+    a = Transfer::Jr::search(from="岐阜", to="名古屋", 2015, 6, 14, hour=10, min=00, "出発")
+    raise a.inspect
+  end
+
   # GET /routes/1
   # GET /routes/1.json
   def show
   end
+
+  # http://transit.loco.yahoo.co.jp/search/result?flatlon=&from=岐阜&tlatlon=&to=名古屋&via=&via=&via=&y=2015&m=6&d=14&hh=16&m1=4&m2=1&type=1&ticket=normal&al=1&shin=1&ex=1&hb=1&lb=1&sr=1&s=0&expkind=1&ws=2&kw=名古屋
+  # http://transit.loco.yahoo.co.jp/search/result?flatlon=&from=岐阜&tlatlon=&to=名古屋&via=&via=&via=&y=2015&m=06&d=14&hh=16&m2=1&m1=4&type=1&ticket=normal&al=1&shin=1&ex=1&hb=1&lb=1&sr=1&s=0&expkind=1&ws=2&kw=名古屋
 
   # GET /routes/new
   def new
