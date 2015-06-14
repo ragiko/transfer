@@ -6,6 +6,7 @@ require "nokogiri"
 module Transfer
   class Jr
     class << self
+      # param: type_str "到着" or "出発"
       def search(from, to, y, m, d, hour, min, type_str)
         ### 調査1
         # http://transit.loco.yahoo.co.jp/search/result?
@@ -70,26 +71,26 @@ module Transfer
 
         routes = []
         doc.css('#srline div[id*="route0"]').each do |route|
-          pp time_list = route.css("li.time").text.scan(/\d{2}:\d{2}/)
-          pp min = route.css("li.time").text.match(/(\d*?分)/)[1]
-          pp fare = route.css("li.fare").text.match(/現金優先：(.*?円)/)[1]
+          time_list = route.css("li.time").text.scan(/\d{2}:\d{2}/)
+          min = route.css("li.time").text.match(/(\d*?分)/)[1]
+          fare = route.css("li.fare").text.match(/現金優先：(.*?円)/)[1]
 
-          route_details = []
+          route_details = {}
           route.css(".routeDetail").each do |route_detail|
             stations = []
             route_detail.css(".station").each do |station|
-              pp time = station.css("ul.time").text
-              pp name = station.css("dl > dt > a").text
+              time = station.css("ul.time").text
+              name = station.css("dl > dt > a").text
 
               stations << {time: time, name: name}
             end
 
-            pp between = route_detail.css(".btnStopNum").text
-            pp transport = route_detail.css("li.transport > div").text.delete("\n[train]")
-            route_details << {
+            between = route_detail.css(".btnStopNum").text
+            transport = route_detail.css("li.transport > div").text.delete("\n[train]")
+            route_details = {
                 between: between,
                 transport: transport,
-                route_details: route_details
+                stations: stations
             }
           end
 

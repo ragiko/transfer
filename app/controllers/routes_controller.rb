@@ -1,4 +1,5 @@
-
+require 'json'
+require 'uri'
 
 class RoutesController < ApplicationController
   before_action :set_route, only: [:show, :edit, :update, :destroy]
@@ -6,22 +7,39 @@ class RoutesController < ApplicationController
   # GET /routes
   # GET /routes.json
   def index
+    if (params.keys.size >= 8)
+      # get param
+      p = params
+      from = p["from"]
+      to = p["to"]
+      y = p["y"]
+      m = p["m"]
+      d = p["d"]
+      hour = p["hh"]
+      min = p["mm"]
+      leave_reach = p["lr"] == "l" ? "出発" : "到着"
+
+    end
+
     @routes = Route.all
+
+    jr_routes = Transfer::Jr::search(from="岐阜", to="名古屋", 2015, 6, 14, hour=10, min=00, "出発")
+    @jr_route = jr_routes.size > 0 ? jr_routes.first : nil
+    pp @jr_route
+
+
   end
 
   def sub
-    require 'json'
-    require 'uri'
+
+
 
     uri=URI.escape('http://api-gifubus.herokuapp.com/v1?date=2015/01/14&time=1605&start_arrive=0&start_name=岐阜大学&arrive_name=JR岐阜')
-
     uri = URI.parse(uri)
     json = Net::HTTP.get(uri)
     result = JSON.parse(json)
 
-    a=result["data"].first["price"]
-    # raise a.inspect
-
+    a = result["data"].first["price"]
     a = Transfer::Jr::search(from="岐阜", to="名古屋", 2015, 6, 14, hour=10, min=00, "出発")
   end
 

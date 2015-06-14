@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get 'routes/sub' => 'routes#sub'
+  post 'routes/sub' => 'routes#sub'
   resources :routes
 
 

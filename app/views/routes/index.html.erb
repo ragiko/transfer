@@ -1,84 +1,145 @@
+<style>
+    .bg-primary {
+        padding: 15px;
+        margin: 0px;
+    }
+
+    .bs-callout-info {
+        border-left-color: #1B809E !important;
+    }
+
+    .bs-callout {
+        padding: 20px;
+        border-width: 1px 1px 1px 5px;
+        border-style: solid;
+        border-color: #EEE;
+        -moz-border-top-colors: none;
+        -moz-border-right-colors: none;
+        -moz-border-bottom-colors: none;
+        -moz-border-left-colors: none;
+        border-image: none;
+        border-radius: 3px;
+    }
+
+    .bs-callout-wp {
+        padding-left: 3%;
+        margin-bottom: 10px;
+    }
+
+    .route-detail {
+        margin-bottom: 20px;
+    }
+
+    .form {
+        background-color: lightgray;
+        padding: 15px;
+    }
+
+</style>
+
 <p id="notice"><%= notice %></p>
 
-<h1>Listing Routes</h1>
+<div class="form">
 
-<table>
-  <thead>
-    <tr>
-      <th>Content</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+    <h1>乗り換え検索</h1>
+    <form action="/routes" accept-charset="UTF-8" method="get">
+        <div class="form-group">
+            <label>from</label>
+            <input name="from" class="form-control" placeholder="from">
+        </div>
+        <div class="form-group">
+            <label>to</label>
+            <input name="to" class="form-control" placeholder="to">
+        </div>
+        <p>
+            <select name="y">
+                <% for i in 0..2 %>
+                    <option value="<%= Time.now.year + i %>"><%= Time.now.year + i %></option>
+                <% end %>
+            </select> 月
 
-  <tbody>
-    <% @routes.each do |route| %>
-      <tr>
-        <td><%= route.content %></td>
-        <td><%= link_to 'Show', route %></td>
-        <td><%= link_to 'Edit', edit_route_path(route) %></td>
-        <td><%= link_to 'Destroy', route, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+            <select name="m">
+                <% for i in 1..12 %>
+                    <option value="<%= i %>"><%= i %></option>
+                <% end %>
+            </select> 月
+            <select name="d">
+                <% for i in 1..31 %>
+                    <option value="<%= i %>"><%= i %></option>
+                <% end %>
+            </select> 日
+        </p>
+        <p>
+            <select name="hh">
+                <% for i in 0..23 %>
+                    <option value="<%= i %>"><%= i %></option>
+                <% end %>
+            </select> 時
+            <select name="mm">
+                <% for i in 0..59 %>
+                    <option value="<%= i %>"><%= i %></option>
+                <% end %>
+            </select> 分
+            <select name="lr">
+                <option value="l">出発</option>
+                <option value="r">到着</option>
+            </select>
+        </p>
+        <p>
+            <label class="radio-inline">
+                <input type="radio" name="inlineRadioOptons" id="inlineRadio1" value="option1"> 指定時刻
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 始発
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> 終電
+            </label>
+        </p>
+        <button type="submit" class="btn btn-default">検索</button>
+    </form>
+</div>
+
+<div class="route">
+    <h2>14:15発 → 15:35発 </h2>
+    <h3>(時間: 60分 料金: 400円)</h3>
+    <div class="route-detail">
+        <p class="bg-primary">繰舟橋 (14:15) 200円
+
+        <p>
+
+        <div class="bs-callout-wp">
+            <div class="bs-callout bs-callout-info" id="callout-help-text-accessibility">
+                <p>
+                    茜部三田洞線 三田洞団地行き 岐阜バス
+                    N61 下佐波→ＪＲ岐阜→長良北町
+                </p>
+            </div>
+        </div>
+        <p class="bg-primary">JR岐阜 (14:35)
+
+        <p>
+    </div>
+
+    <%="あいうえお"%>
+    <% if !@jr_route.nil? %>
+        <div class="route-detail">
+            <p>(時間: <%= @jr_route[:min] %> 料金: <%= @jr_route[:fare] %>)</p>
+            <% stations = @jr_route[:route_details][:stations] %>
+            <p class="bg-primary"><%= stations[0][:name] %> <%= stations[0][:time] %>
+
+            <p>
+
+            <div class="bs-callout-wp">
+                <div class="bs-callout bs-callout-info" id="callout-help-text-accessibility">
+                    <p>
+                        <%= @jr_route[:route_details][:transport] %> (<%= @jr_route[:route_details][:between] %>)
+                    </p>
+                </div>
+            </div>
+            <p class="bg-primary"><%= stations[1][:name] %> <%= stations[1][:time] %>
+            <p>
+        </div>
     <% end %>
-  </tbody>
+</div>
 
-  <form>
-      <div class="form-group">
-        <label for="exampleInputEmail1">from</label>
-          <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Origin">
-      </div>
-      <div class="form-group">
-          <label for="exampleInputPassword1">to</label>
-          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Destination">
-      </div>
-
-    <p>
-      <select name="year-month">
-      <option value="6">2015年6</option>
-      <option value="7">2015年7</option>
-      <option value="8">2015年8</option>
-      </select> 月
-      <select name="day">
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      </select> 日
-    </p>
-    <p>
-      <select name="hour">
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      </select> 時
-      <select name="minute">
-        <% for i in 0..59 %>
-          <option value="<%=i%>"><%=i%></option>
-
-        <% end %>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      </select> 分
-      <select name="leave-reach">
-      <option value="leave">出発</option>
-      <option value="reach">到着</option>
-      </select>
-    </p>
-
-  <p>
-    <label class="radio-inline">
-        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 指定時刻
-    </label>
-    <label class="radio-inline">
-        <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 始発
-    </label>
-    <label class="radio-inline">
-        <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> 終電
-    </label>
-  </p>
-    <button type="submit" class="btn btn-default">検索</button>
-  </form>
-</table>
-
-<br>
-
-<%= link_to 'New Route', new_route_path %>
