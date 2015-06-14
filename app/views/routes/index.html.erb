@@ -23,25 +23,59 @@
 
   <form>
       <div class="form-group">
-          <label for="exampleInputEmail1">Email address</label>
-          <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+        <label for="exampleInputEmail1">from</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Origin">
       </div>
       <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+          <label for="exampleInputPassword1">to</label>
+          <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Destination">
       </div>
-      <div class="form-group">
-          <label for="exampleInputFile">File input</label>
-          <input type="file" id="exampleInputFile">
 
-          <p class="help-block">Example block-level help text here.</p>
-      </div>
-      <div class="checkbox">
-          <label>
-              <input type="checkbox"> Check me out
-          </label>
-      </div>
-      <button type="submit" class="btn btn-default">Submit</button>
+    <p>
+      <select name="year-month">
+      <option value="6">2015年6</option>
+      <option value="7">2015年7</option>
+      <option value="8">2015年8</option>
+      </select> 月
+      <select name="day">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      </select> 日
+    </p>
+    <p>
+      <select name="hour">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      </select> 時
+      <select name="minute">
+        <% for i in 0..59 %>
+          <option value="<%=i%>"><%=i%></option>
+
+        <% end %>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      </select> 分
+      <select name="leave-reach">
+      <option value="leave">出発</option>
+      <option value="reach">到着</option>
+      </select>
+    </p>
+
+  <p>
+    <label class="radio-inline">
+        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 指定時刻
+    </label>
+    <label class="radio-inline">
+        <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 始発
+    </label>
+    <label class="radio-inline">
+        <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> 終電
+    </label>
+  </p>
+    <button type="submit" class="btn btn-default">検索</button>
   </form>
 </table>
 
